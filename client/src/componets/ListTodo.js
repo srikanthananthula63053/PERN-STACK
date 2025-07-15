@@ -1,6 +1,18 @@
 
 import React, { Fragment, useState, useEffect } from "react";
 
+const deleteTodo = async (id) => {
+    try {
+        const todoDelete = await fetch(`http://localhost:5000/todos/${id}`, {
+            method: "DELETE"
+        }
+        )
+        console.log(todoDelete)
+    } catch (err) {
+        console.error(err.message)
+    }
+}
+
 const ListTodo = () => {
     const [todos, setTodos] = useState([])
     const getTodos = async () => {
@@ -15,7 +27,7 @@ const ListTodo = () => {
     }
 
     useEffect(() => { getTodos() }, [])
-    console.log(todos)
+
     return (
         <Fragment>
             <table class="table mt-5 text-center">
@@ -30,11 +42,20 @@ const ListTodo = () => {
                     {
                         todos.length > 0 ?
                             todos.map(todo => (
-                                <td>{todo.description}</td>
+                                <tr>
+                                    <td>{todo.description}</td>
+                                    <td>Edit</td>
+                                    <td>
+                                        <button className="btn btn-danger" onClick={() => deleteTodo(todo.todo_id)}>
+                                            Delete</button>
+                                    </td>
+                                </tr>
                             )
-
                             ) : <></>
+
+
                     }
+
                 </tbody>
             </table>
         </Fragment>
